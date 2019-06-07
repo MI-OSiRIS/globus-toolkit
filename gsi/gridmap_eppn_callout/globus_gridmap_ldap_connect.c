@@ -25,6 +25,7 @@
 #include <openssl/ssl.h>
 #include <stdio.h>
 #include <ldap.h>
+#include<string.h> 
 
 #if OPENSSL_VERSION_NUMBER < 0x0090801fL
 #define GT_D2I_ARG_CAST (unsigned char **)
@@ -630,34 +631,103 @@ globus_gridmap_eppn_callout(
     }
     else{ //todo
         
+        // required
         char *ldap_server;
+        char *ldap_root;
+
+        // optional
         char *ldap_bind;
         char *ldap_bind_password;
         
+        // defaults
         char ldap_dn_attribute[] = "voPersonCertificateDN";
-        char *ldap_root;
-        char *ldap_object_class;
+        char uid_atribute[] = "uid";
+        char ldap_object_class[] = "";
+
+        char *filter=NULL;
+        int rc;
+        LDAPMessage *result, e;
+        BerElement *ber;
 
         LDAP *ld;
 
+        // check required
+        // TODO for each step check ERROR
+        if(!(ldap_server = getenv("LDAP_SERVER"))) goto gridmap_lookup; // TODO ERROR No LDAP Server set
+        if((ld = ldap_init(ldap_server))==NULL) goto gridmap_lookup; // TODO ERROR LDAP Server could not be intialized
+        // TODO init or initialize or open
+        if(!(ldap_root = getenv("LDAP_ROOT"))) goto gridmap_lookup; // TODO ERROR No LDAP Root set
 
-        if(!(ldap_server = getenv("LDAP_SERVER"))) goto gridmap_lookup;
-        if((ld = ldap_init(ldap_server))==NULL) goto gridmap_lookup;
-        if(!(ldap_root = getenv("LDAP_ROOT"))) goto gridmap_lookup;
-
+        // check for option bind and if so then bind
         if(ldap_bind = getenv("LDAP_BIND")){
             if(ldap_bind_password = getenv("LDAP_BIND_PASSWORD")){
-                ldap_kerbos_bind_s(ld,ldap_bind);
+                rc = ldap_kerbos_bind_s(ld,ldap_bind);
             }
             else{
-                ldap_simple_bind(ld,ldap_bind,ldap_bind_password);
+                rc = ldap_simple_bind_s(ld,ldap_bind,ldap_bind_password);
             }
+
+            // TODO ERROR LDAP Bind failed goto gridmap_lookup;
         }
+
+        // check for defaults 
+        if(getenv("UID_ATRIBUTE")){
+            uid_atribute = getenv("UID_ATRIBUTE");
+        }
+        if(getenv("LDAP_OBJECT_CLASS")){
+            ldap_object_class = getenv("LDAP_OBJECT_CLASS");
+
+            //create filter (objectClass=)
+            char *b;
+            for(b = ldap_object_class;*b;b++);
+            filter = malloc(14+b-ldap_object_class);
+            char* objCla = "(objectClass=";
+            int i;
+            for(i =0; i<13;i++) filter[i] = objCla[i];
+            for(char* b = ldap_object_class;*b;b++, i++) filter[i]=*b;
+            filter[i++] = ')';
+            filter[i]=0; 
+        } 
         if(getenv("LDAP_DN_ATTRIBUTE")){
             ldap_dn_attribute = getenv("LDAP_DN_ATTRIBUTE");
         }
+        char* attrs[] = {ldap_dn_attribute};
 
+
+        //convert subjectDN into ldap format
+        char *b = subject;
+        for(;*b;b++);
+        char *ldap_subject=malloc(b-subject);
+        int i = 0;
+        while(b>subject){
+            for(;*b!='/';b--);
+            char* nStart = b++ -1;
+            for(;*b && *b!='/';b++, i++) ldap_subject[i]=*b;
+            ldap_subject[i++]=',';
+            b=nStart;
+        }
+        ldap_subject[--i]=0;
         
+        rc = ldap_search_s(ld,ldap_root,LDAP_SCOPE_SUBTREE,filter,attrs,0,&result); // TODO find out how to return
+        
+        //free malloc
+        free(ldap_subject);
+        if(getenv("LDAP_OBJECT_CLASS")){
+            free(filter);
+        }
+
+        if( rc != LDAP_SUCCESS) goto gridmap_lookup; // TODO ERROR: ldap_search failed did not find attribute ldap_dn_attribute matching value
+
+        e = ldap_first_entry(ld,result);
+        if (e == NULL) goto gridmap_lookup; // TODO ERROR: ldap search results error: No LDAP entry found for client
+
+        char* uidAttr = ldap_first_attribute(ld, e, &ber);
+        if (uidAttr == NULL) goto gridmap_lookup; // TODO ERROR: ldap search results error: No UID or GID Attribute found for client ldap_dn_attribute. look up failed
+        
+        char** uidVal = ldap_get_values(ld, e, uidAttr);
+        if (uidVal == NULL) goto gridmap_lookup; // TODO ERROR: ldap search results error: No UID Values found for client Lookup failed.
+      
+
 
         gridmap_lookup:
             /* proceed with gridmap lookup */
