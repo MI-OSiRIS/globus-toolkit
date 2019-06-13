@@ -11,9 +11,10 @@ libglobus_gridmap_eppn_callout_la_LDFLAGS = \
         -module \
         -rpath $(libdir)
 libglobus_gridmap_eppn_callout_la_LIBADD = $(PACKAGE_DEP_LIBS) $(OPENSSL_LIBS)
-libglobus_gridmap_eppn_callout_la_SOURCES = globus_gridmap_eppn.c
+libglobus_gridmap_eppn_callout_la_SOURCES = globus_gridmap_ldap_connect.c
 
 EXTRA_DIST = dirt.sh $(doc_DATA) $(sysconf_DATA)
 
 distuninstallcheck:
 	@:
+ 
