@@ -556,7 +556,7 @@ error:
 }
 
 globus_result_t
-globus_gridmap_eppn_callout(
+globus_gridmap_ldap_connect(
     va_list                             ap)
 {
     gss_ctx_id_t                        context;

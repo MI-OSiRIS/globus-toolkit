@@ -1,6 +1,6 @@
 AC_PREREQ([2.60])
 
-AC_INIT([globus_gridmap_eppn_callout],[1.14],[https://github.com/globus/globus-toolkit/issues])
+AC_INIT([globus_gridmap_ldap_connect],[1.14],[https://github.com/globus/globus-toolkit/issues])
 AC_CONFIG_MACRO_DIR([m4])
 AC_SUBST([MAJOR_VERSION], [${PACKAGE_VERSION%%.*}])
 AC_SUBST([MINOR_VERSION], [${PACKAGE_VERSION##*.}])
@@ -26,8 +26,8 @@ AC_SUBST([OPENSSL_PKGCONFIG])
 PKG_CHECK_MODULES([PACKAGE_DEP], $PACKAGE_DEPS)
 
 AC_CONFIG_FILES(
-        globus-gridmap-eppn-callout-uninstalled.pc
-        globus-gridmap-eppn-callout.pc
+        globus-gridmap-ldap_connect-uninstalled.pc
+        globus-gridmap-ldap_connect.pc
         Makefile
 	version.h)
 AC_OUTPUT

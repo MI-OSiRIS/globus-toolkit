@@ -3,7 +3,7 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: globus-gridmap-eppn-callout
-Description: Globus Toolkit - Globus gridmap ePPN callout.
+Name: globus-gridmap-ldap_connect
+Description: Globus Toolkit - Globus gridmap ldap connection callout.
 Version: @VERSION@
 Requires.private: @PACKAGE_DEPS@, @OPENSSL_PKGCONFIG@

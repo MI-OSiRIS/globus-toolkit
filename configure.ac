@@ -279,7 +279,7 @@ GT_PACKAGE([globus_gridmap_verify_myproxy_callout],
     [ globus_gsi_sysconfig  globus_gssapi_gsi  globus_gss_assist
       globus_gridmap_callout_error  globus_gsi_credential ],
       [gsi])
-GT_PACKAGE([globus_gridmap_eppn_callout], [gsi/gridmap_eppn_callout],
+GT_PACKAGE([globus_gridmap_ldap_connect], [gsi/gridmap_ldap_connect],
     [ globus_gsi_sysconfig globus_gssapi_gsi globus_gss_assist
       globus_gridmap_callout_error globus_gsi_credential ],
     [gsi])
