@@ -3,7 +3,7 @@ doc_DATA = GLOBUS_LICENSE
 sysconf_DATA = gridmap_ldap_connect-gsi_authz.conf
 lib_LTLIBRARIES = libglobus_gridmap_ldap_connect.la
 
-AM_CPPFLAGS = $(PACKAGE_DEP_CFLAGS) $(OPENSSL_CFLAGS)
+libglobus_gridmap_verify_ldap_connect_la_CPPFLAGS = $(PACKAGE_DEP_CFLAGS) $(OPENSSL_CFLAGS)
 
 libglobus_gridmap_ldap_connect_la_LDFLAGS = \
         -avoid-version \
