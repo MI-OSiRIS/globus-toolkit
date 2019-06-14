@@ -1,7 +1,7 @@
 ACLOCAL_AMFLAGS=-I m4
 doc_DATA = GLOBUS_LICENSE
 sysconf_DATA = gridmap_ldap_connect-gsi_authz.conf
-lib_LTLIBRARIES = libglobus_gridmap_eppn_callout.la
+lib_LTLIBRARIES = libglobus_gridmap_ldap_connect.la
 
 AM_CPPFLAGS = $(PACKAGE_DEP_CFLAGS) $(OPENSSL_CFLAGS)
 
