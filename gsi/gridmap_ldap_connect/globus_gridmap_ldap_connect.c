@@ -640,16 +640,21 @@ globus_gridmap_ldap_connect(
         char *ldap_bind_password;
         
         // defaults
-        char ldap_dn_attribute[] = "voPersonCertificateDN";
+        char ldap_dn_attribute*;
+        char ldap_dn_attribute_default[] = "voPersonCertificateDN";
 
-        char uid_atribute[] = "uid";
+        char uid_atribute*;
+        char uid_attribute_default[] = "uid";
 
-        char ldap_object_class_attribute[] = "objectClass";
-        char ldap_object_class[] = "";
+        char ldap_object_class_attribute*;
+        char ldap_object_class_attribute_default[] = "objectClass";
+
+        char ldap_object_class*;
+        char ldap_object_class_default[] = "";
 
         char *filter=NULL;
         int rc;
-        LDAPMessage *lresult, e;
+        LDAPMessage *lresult, *e;
         BerElement *ber;
 
         LDAP *ld;
@@ -664,14 +669,14 @@ globus_gridmap_ldap_connect(
                  found_identity, desired_identity));
             goto gridmap_lookup; 
         }
-        if((ld = ldap_init(ldap_server))==NULL){
+        if(ldap_initialize(&ld,ldap_server)!=LDAP_SUCCESS){
             GLOBUS_GRIDMAP_CALLOUT_ERROR(
                 result,
                 GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
                 ("Ldap server could not be initialized.\n",
                  found_identity, desired_identity));
             goto gridmap_lookup; 
-        } // TODO init or initialize or open
+        } 
         if(!(ldap_root = getenv("LDAP_ROOT"))){
             GLOBUS_GRIDMAP_CALLOUT_ERROR(
                 result,
@@ -693,7 +698,7 @@ globus_gridmap_ldap_connect(
                     found_identity, desired_identity));
                 goto gridmap_lookup; 
             }
-            if(ldap_simple_bind_s(ld,ldap_bind,ldap_bind_password) ! = LDAP_SUCESS){
+            if(ldap_simple_bind_s(ld,ldap_bind,ldap_bind_password) != LDAP_SUCESS){
                 GLOBUS_GRIDMAP_CALLOUT_ERROR(
                     result,
                     GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
@@ -707,11 +712,29 @@ globus_gridmap_ldap_connect(
         if(getenv("UID_ATTRIBUTE")){
             uid_atribute = getenv("UID_ATTRIBUTE");
         }
+        else{
+            uid_attribute = uid_attribute_default;
+        }
+
         if(getenv("LDAP_OBJECT_CLASS")){
             ldap_object_class = getenv("LDAP_OBJECT_CLASS");
         } 
+        else{
+            ldap_object_class = ldap_object_class_default;
+        }
+
+        if(getenv("LDAP_OBJECT_CLASS_ATTRIBUTE")){
+            ldap_object_class_attribute = getenv("LDAP_OBJECT_CLASS_ATTRIBUTE");
+        } 
+        else{
+            ldap_object_class_attribute = ldap_object_class_attribute_default;
+        }
+
         if(getenv("LDAP_DN_ATTRIBUTE")){
             ldap_dn_attribute = getenv("LDAP_DN_ATTRIBUTE");
+        }
+        else{
+            ldap_dn_attribute = ldap_dn_attribute_default;
         }
         char* attrs[] = {ldap_dn_attribute};
 
@@ -740,30 +763,33 @@ globus_gridmap_ldap_connect(
         filter = malloc(filterLen);
         if(strlen(ldap_object_class)==0){
             int i = 0;
+            char *b;
 
             filter[i++]='(';
-            for(char *b=ldap_dn_attribute;*b;b++) filter[i++]=*b;
+            for(b=ldap_dn_attribute;*b;b++) filter[i++]=*b;
             filter[i++]='=';
-            for(char *b=ldap_subject;*b;b++) filter[i++]=*b;
+            for(b=ldap_subject;*b;b++) filter[i++]=*b;
             filter[i++]=')';
 
             filter[i]=0;
         }
         else{
             int i = 0;
+            char *b;
+
             filter[i++]='(';
             filter[i++]='&';
 
             filter[i++]='(';
-            for(char *b=ldap_dn_attribute;*b;b++) filter[i++]=*b;
+            for(b=ldap_dn_attribute;*b;b++) filter[i++]=*b;
             filter[i++]='=';
-            for(char *b=ldap_subject;*b;b++) filter[i++]=*b;
+            for(b=ldap_subject;*b;b++) filter[i++]=*b;
             filter[i++]=')';
 
             filter[i++]='(';
-            for(char *b=ldap_object_class_attribute;*b;b++) filter[i++]=*b;
+            for(b=ldap_object_class_attribute;*b;b++) filter[i++]=*b;
             filter[i++]='=';
-            for(char *b=ldap_object_class;*b;b++) filter[i++]=*b;
+            for(b=ldap_object_class;*b;b++) filter[i++]=*b;
             filter[i++]=')';
 
             filter[i++]=')';
