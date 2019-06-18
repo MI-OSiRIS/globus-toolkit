@@ -643,7 +643,7 @@ globus_gridmap_ldap_connect(
         char *ldap_dn_attribute;
         char ldap_dn_attribute_default[] = "voPersonCertificateDN";
 
-        char *uid_atribute;
+        char *uid_attribute;
         char uid_attribute_default[] = "uid";
 
         char *ldap_object_class_attribute;
@@ -698,7 +698,7 @@ globus_gridmap_ldap_connect(
                     found_identity, desired_identity));
                 goto gridmap_lookup; 
             }
-            if(ldap_simple_bind_s(ld,ldap_bind,ldap_bind_password) != LDAP_SUCESS){
+            if(ldap_simple_bind_s(ld,ldap_bind,ldap_bind_password) != LDAP_SUCCESS){
                 GLOBUS_GRIDMAP_CALLOUT_ERROR(
                     result,
                     GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
@@ -841,6 +841,7 @@ globus_gridmap_ldap_connect(
                 GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
                 ("ldap search results error: No UID Values found for client Lookup failed.\n",
                 found_identity, desired_identity));
+                ldap_value_free(uidVal);
             goto gridmap_lookup;
         }
       
@@ -854,8 +855,10 @@ globus_gridmap_ldap_connect(
                 GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
                 ("Credentials specify id of %s, can not allow id of %s.\n",
                  uidVal[0], desired_identity));
+                 ldap_value_free(uidVal);
             goto error;
         }
+        ldap_value_free(uidVal);
 
         gridmap_lookup:
             /* proceed with gridmap lookup */
