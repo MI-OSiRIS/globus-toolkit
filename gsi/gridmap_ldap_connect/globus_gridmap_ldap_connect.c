@@ -834,7 +834,7 @@ globus_gridmap_ldap_connect(
             goto gridmap_lookup;
         }
         
-        char** uidVal = ldap_get_values(ld, e, uid_attribute);
+        char** uidVal = ldap_get_values(ld, e, uidAttr);
         if (uidVal == NULL){
             GLOBUS_GRIDMAP_CALLOUT_ERROR(
                 result,
