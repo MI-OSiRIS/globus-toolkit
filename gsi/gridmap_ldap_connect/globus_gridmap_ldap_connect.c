@@ -640,16 +640,16 @@ globus_gridmap_ldap_connect(
         char *ldap_bind_password;
         
         // defaults
-        char ldap_dn_attribute*;
+        char *ldap_dn_attribute;
         char ldap_dn_attribute_default[] = "voPersonCertificateDN";
 
-        char uid_atribute*;
+        char *uid_atribute;
         char uid_attribute_default[] = "uid";
 
-        char ldap_object_class_attribute*;
+        char *ldap_object_class_attribute;
         char ldap_object_class_attribute_default[] = "objectClass";
 
-        char ldap_object_class*;
+        char *ldap_object_class;
         char ldap_object_class_default[] = "";
 
         char *filter=NULL;
