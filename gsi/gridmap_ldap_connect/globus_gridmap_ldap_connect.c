@@ -710,7 +710,7 @@ globus_gridmap_ldap_connect(
 
         // check for defaults fix attribute to attr
         if(getenv("UID_ATTRIBUTE")){
-            uid_atribute = getenv("UID_ATTRIBUTE");
+            uid_attribute = getenv("UID_ATTRIBUTE");
         }
         else{
             uid_attribute = uid_attribute_default;
@@ -834,7 +834,7 @@ globus_gridmap_ldap_connect(
             goto gridmap_lookup;
         }
         
-        char** uidVal = ldap_get_values(ld, e, uid_atribute);
+        char** uidVal = ldap_get_values(ld, e, uid_attribute);
         if (uidVal == NULL){
             GLOBUS_GRIDMAP_CALLOUT_ERROR(
                 result,
