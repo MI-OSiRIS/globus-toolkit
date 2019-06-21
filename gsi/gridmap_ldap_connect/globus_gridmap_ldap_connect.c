@@ -613,9 +613,23 @@ globus_gridmap_ldap_connect(
         goto error;
     }
 
+    result = ggvm_get_myproxy_userid(
+        context, subject, &found_identity, shared_user_cert, shared_user_chain, shared_exp);
     
+    if(result == GLOBUS_SUCCESS)
+    {
+        if(desired_identity && strcmp(found_identity, desired_identity) != 0)
+        {
+            GLOBUS_GRIDMAP_CALLOUT_ERROR(
+                result,
+                GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
+                ("Credentials specify id of %s, can not allow id of %s.\n",
+                 found_identity, desired_identity));
+            globus_free(found_identity);
+            goto error;
+        }
+    }
     
-    // start
        
     // required
     char *ldap_server;
@@ -639,7 +653,7 @@ globus_gridmap_ldap_connect(
     char ldap_object_class_default[] = "";
 
     char *filter=NULL;
-    
+    int rc;
     LDAPMessage *lresult, *e;
     BerElement *ber;
 
@@ -834,6 +848,7 @@ globus_gridmap_ldap_connect(
     
     // uidVal[0] is the uid
 
+    globus_free(found_identity);
     if(desired_identity && strcmp(uidVal[0], desired_identity) != 0)
     {
         GLOBUS_GRIDMAP_CALLOUT_ERROR(
@@ -845,6 +860,7 @@ globus_gridmap_ldap_connect(
         goto error;
     }
     ldap_value_free(uidVal);
+    
 
     gridmap_lookup:
         /* proceed with gridmap lookup */
