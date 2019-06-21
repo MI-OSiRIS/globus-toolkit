@@ -1,0 +1,13 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+abs_top_builddir=/user/rdutta/globus-toolkit/common/source
+abs_top_srcdir=/user/rdutta/globus-toolkit/common/source
+dlopen=-dlopen '${abs_top_builddir}/library/libglobus_thread_pthread.la'
+dlpreopen=-dlpreopen '${abs_top_builddir}/library/libglobus_thread_pthread.la'
+
+Name: globus-thread-pthreads
+Description: Globus Toolkit - Common Library Pthreads Bindings
+Version: 17.4
+Libs.private: -lglobus_common

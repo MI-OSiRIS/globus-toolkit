@@ -1,0 +1,13 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+abs_top_srcdir=/user/rdutta/globus-toolkit/gram/jobmanager/callout_error
+abs_top_builddir=/user/rdutta/globus-toolkit/gram/jobmanager/callout_error
+
+Name: globus-gram-job-manager-callout-error
+Description: Globus Toolkit - Globus GRAM Jobmanager Callout Errors
+Version: 3.6
+Requires.private: globus-common >= 14
+Libs: ${abs_top_builddir}/libglobus_gram_job_manager_callout_error.la
+Cflags: -I${abs_top_srcdir}

@@ -1,0 +1,11 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: globus-gram-job-manager-callout-error
+Description: Globus Toolkit - Globus GRAM Jobmanager Callout Errors
+Version: 3.6
+Requires.private: globus-common >= 14
+Libs: -L${libdir} -lglobus_gram_job_manager_callout_error
+Cflags: -I${includedir}

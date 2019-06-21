@@ -1,0 +1,13 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+abs_top_srcdir=/user/rdutta/globus-toolkit/usage/c/sender/source
+abs_top_builddir=/user/rdutta/globus-toolkit/usage/c/sender/source
+
+Name: globus-usage
+Description: Globus Toolkit - Usage Library
+Version: 4.5
+Requires.private: globus-common >= 14, globus-xio >= 3
+Libs: ${abs_top_builddir}/libglobus_usage.la
+Cflags: -I${abs_top_srcdir}

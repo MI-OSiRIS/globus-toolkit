@@ -1,0 +1,9 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: globus-gatekeeper
+Description: Globus Toolkit - Globus Gatekeeper
+Version: 10.12
+Requires.private: globus-common >= 14, globus-gss-assist >= 8, globus-gssapi-gsi >= 9

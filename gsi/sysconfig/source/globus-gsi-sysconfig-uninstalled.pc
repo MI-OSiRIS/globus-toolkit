@@ -1,0 +1,13 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+abs_top_srcdir=/user/rdutta/globus-toolkit/gsi/sysconfig/source
+abs_top_builddir=/user/rdutta/globus-toolkit/gsi/sysconfig/source
+
+Name: globus-gsi-sysconfig
+Description: Globus Toolkit - Globus GSI System Config Library
+Version: 8.1
+Requires.private: globus-common >= 15, globus-openssl-module >= 3, globus-gsi-openssl-error >= 2, openssl >= 1.0
+Libs: ${abs_top_builddir}/library/libglobus_gsi_sysconfig.la
+Cflags: -I${abs_top_srcdir}/library

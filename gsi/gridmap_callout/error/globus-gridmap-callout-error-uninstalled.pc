@@ -1,0 +1,13 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+abs_top_srcdir=/user/rdutta/globus-toolkit/gsi/gridmap_callout/error
+abs_top_builddir=/user/rdutta/globus-toolkit/gsi/gridmap_callout/error
+
+Name: globus-gridmap-callout-error
+Description: Globus Toolkit - Globus Gridmap Callout Errors
+Version: 2.5
+Requires.private: globus-common >= 14, globus-gssapi-error >= 4
+Libs: ${abs_top_builddir}/libglobus_gridmap_callout_error.la
+Cflags: -I${abs_top_srcdir}

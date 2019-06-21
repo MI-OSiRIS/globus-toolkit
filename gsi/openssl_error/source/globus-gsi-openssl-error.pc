@@ -1,0 +1,11 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: globus-gsi-openssl-error
+Description: Globus Toolkit - Globus OpenSSL Error Handling
+Version: 3.8
+Requires.private: globus-common >= 14, openssl >= 1.0
+Libs: -L${libdir} -lglobus_openssl_error
+Cflags: -I${includedir}

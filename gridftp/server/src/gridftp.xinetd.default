@@ -1,0 +1,14 @@
+service gsiftp
+{
+instances               = 100
+socket_type             = stream
+wait                    = no
+user                    = root
+env                     += GLOBUS_LOCATION=/usr/local/globus-6
+env += LD_LIBRARY_PATH=/usr/local/globus-6/lib
+server                  = /usr/local/globus-6/sbin/globus-gridftp-server
+server_args             = -i
+log_on_success          += DURATION
+nice                    = 10
+disable                 = yes
+}

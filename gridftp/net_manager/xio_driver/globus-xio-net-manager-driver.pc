@@ -1,0 +1,11 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: globus-xio-net-manager-driver
+Description: Globus Toolkit - Globus XIO Net Manager Driver
+Version: 0.18
+Requires.private: globus-common >= 15.27, globus-xio >= 5, globus-net-manager
+Libs: -L${libdir}
+Cflags: -I${includedir}

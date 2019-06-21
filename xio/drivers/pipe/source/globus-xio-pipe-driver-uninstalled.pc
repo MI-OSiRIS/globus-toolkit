@@ -1,0 +1,14 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=/user/rdutta/globus-toolkit/xio/drivers/pipe/source
+includedir=/user/rdutta/globus-toolkit/xio/drivers/pipe/source
+abs_top_builddir=/user/rdutta/globus-toolkit/xio/drivers/pipe/source
+abs_top_srcdir=/user/rdutta/globus-toolkit/xio/drivers/pipe/source
+dlopen=-dlopen /user/rdutta/globus-toolkit/xio/drivers/pipe/source/libglobus_xio_pipe_driver.la
+dlpreopen=-dlpreopen /user/rdutta/globus-toolkit/xio/drivers/pipe/source/libglobus_xio_pipe_driver.la
+
+Name: globus-xio-pipe-driver
+Description: Globus Toolkit - Globus Pipe Driver
+Version: 3.10
+Requires.private: globus-xio >= 3, globus-common >= 14
+Cflags: -I${abs_top_srcdir}

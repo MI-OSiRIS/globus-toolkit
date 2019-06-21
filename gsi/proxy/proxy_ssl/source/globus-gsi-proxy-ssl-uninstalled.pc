@@ -1,0 +1,13 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+abs_top_builddir=/user/rdutta/globus-toolkit/gsi/proxy/proxy_ssl/source
+abs_top_srcdir=/user/rdutta/globus-toolkit/gsi/proxy/proxy_ssl/source
+
+Name: globus-gsi-proxy-ssl
+Description: Globus Toolkit - Globus GSI Proxy SSL Library
+Version: 5.10
+Requires.private: openssl >= 1.0
+Libs: ${abs_top_builddir}/library/libglobus_proxy_ssl.la
+Cflags: -I${abs_top_srcdir} -I${abs_top_srcdir}/library

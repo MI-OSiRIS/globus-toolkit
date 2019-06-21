@@ -1,0 +1,14 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+abs_top_srcdir=/user/rdutta/globus-toolkit/gram/protocol/source
+abs_top_builddir=/user/rdutta/globus-toolkit/gram/protocol/source
+perl5lib=/user/rdutta/globus-toolkit/gram/protocol/source/scripts
+
+Name: globus-gram-protocol
+Description: Globus Toolkit - GRAM Protocol Library
+Version: 12.16
+Requires.private: globus-common >= 14, globus-io >= 8, globus-gssapi-gsi >= 10, globus-gss-assist >= 8
+Libs: ${abs_top_builddir}/libglobus_gram_protocol.la
+Cflags: -I${abs_top_srcdir} -I${abs_top_builddir}

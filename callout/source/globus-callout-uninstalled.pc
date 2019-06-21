@@ -1,0 +1,13 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+abs_top_srcdir=/user/rdutta/globus-toolkit/callout/source
+abs_top_builddir=/user/rdutta/globus-toolkit/callout/source
+
+Name: globus-callout
+Description: Globus Toolkit - Globus Callout Library
+Version: 3.15
+Requires.private: globus-common >= 15
+Libs: ${abs_top_builddir}/library/libglobus_callout.la
+Cflags: -I${abs_top_srcdir}/library

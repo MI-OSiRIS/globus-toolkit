@@ -614,7 +614,7 @@ globus_gridmap_ldap_connect(
     }
 
     result = ggvm_get_myproxy_userid(
-        context, subject, &found_identity, shared_user_cert, shared_user_chain, shared_exp);
+       context, subject, &found_identity, shared_user_cert, shared_user_chain, shared_exp);
     
     if(result == GLOBUS_SUCCESS)
     {

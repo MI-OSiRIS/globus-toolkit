@@ -1,0 +1,4 @@
+libglobus_xio_la-globus_xio_system_win32.lo: globus_xio_system_win32.c \
+ /usr/include/stdc-predef.h
+
+/usr/include/stdc-predef.h:

@@ -1,0 +1,14 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+abs_top_builddir=/user/rdutta/globus-toolkit/gridftp/net_manager
+abs_top_srcdir=/user/rdutta/globus-toolkit/gridftp/net_manager
+
+Name: globus-net-manager
+Description: Globus Toolkit - Network Manager
+Version: 0.18
+Requires.private: globus-common >= 15.27, globus-xio >= 5
+Libs: ${abs_top_builddir}/libglobus_net_manager.la
+Libs.private: 
+Cflags: -I${abs_top_srcdir} 

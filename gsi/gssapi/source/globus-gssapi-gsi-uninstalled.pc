@@ -1,0 +1,13 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+abs_top_srcdir=/user/rdutta/globus-toolkit/gsi/gssapi/source
+abs_top_builddir=/user/rdutta/globus-toolkit/gsi/gssapi/source
+
+Name: globus-gssapi-gsi
+Description: Globus Toolkit - GSSAPI library
+Version: 13.11
+Requires.private: globus-common >= 14, globus-openssl-module >= 3, globus-gsi-openssl-error >= 2, globus-gsi-cert-utils >= 8, globus-gsi-credential >= 5, globus-gsi-callback >= 4, globus-gsi-proxy-core >= 6, globus-gsi-sysconfig >= 8, openssl >= 1.0
+Libs: ${abs_top_builddir}/library/libglobus_gssapi_gsi.la
+Cflags: -I${abs_top_srcdir}/library

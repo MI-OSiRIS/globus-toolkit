@@ -1,0 +1,13 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+abs_top_srcdir=/user/rdutta/globus-toolkit/gram/rsl/source
+abs_top_builddir=/user/rdutta/globus-toolkit/gram/rsl/source
+
+Name: globus-rsl
+Description: Globus Toolkit - Resource Specification Language Library
+Version: 10.11
+Requires.private: globus-common >= 14
+Libs: ${abs_top_builddir}/libglobus_rsl_assist.la ${abs_top_builddir}/libglobus_rsl.la
+Cflags: -I${abs_top_srcdir}

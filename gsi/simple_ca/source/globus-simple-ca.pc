@@ -1,0 +1,9 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: globus-simple-ca
+Description: Globus Toolkit - Simple CA Utility
+Version: 4.24
+Requires.private: globus-common >= 14

@@ -1,0 +1,14 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=/user/rdutta/globus-toolkit/xio/drivers/gsi
+includedir=${prefix}/include
+abs_top_builddir=/user/rdutta/globus-toolkit/xio/drivers/gsi
+abs_top_srcdir=/user/rdutta/globus-toolkit/xio/drivers/gsi
+dlpreopen=-dlpreopen /user/rdutta/globus-toolkit/xio/drivers/gsi/libglobus_xio_gsi_driver.la
+dlopen=-dlopen /user/rdutta/globus-toolkit/xio/drivers/gsi/libglobus_xio_gsi_driver.la
+
+Name: globus-xio-gsi-driver
+Description: Globus Toolkit - Globus XIO GSI Driver
+Version: 4.1
+Requires.private: globus-xio >= 3, globus-gss-assist >= 11, globus-gssapi-error >= 4, globus-gssapi-gsi >= 13, globus-common >= 14
+Cflags: -I${abs_top_srcdir}

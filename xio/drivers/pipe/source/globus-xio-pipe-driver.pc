@@ -1,0 +1,10 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: globus-xio-pipe-driver
+Description: Globus Toolkit - Globus Pipe Driver
+Version: 3.10
+Requires.private: globus-xio >= 3, globus-common >= 14
+Cflags: -I${includedir}

@@ -1,0 +1,9 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: globus-gass-cache-program
+Description: Globus Toolkit - Tools to manipulate local and remote GASS caches.
+Version: 6.7
+Requires.private: globus-common >= 14, globus-gass-cache >= 8, globus-gass-copy >= 8, globus-gass-transfer >= 7, globus-gass-server-ez >= 4, globus-gram-client >= 12

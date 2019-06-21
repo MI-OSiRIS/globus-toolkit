@@ -1,0 +1,9 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: globus-xioperf
+Description: Globus Toolkit - XIO Performance Tool
+Version: 4.5
+Requires.private: globus-common >= 14, globus-xio >= 3

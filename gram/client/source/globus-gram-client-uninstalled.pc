@@ -1,0 +1,13 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+abs_top_srcdir=/user/rdutta/globus-toolkit/gram/client/source
+abs_top_builddir=/user/rdutta/globus-toolkit/gram/client/source
+
+Name: globus-gram-client
+Description: Globus Toolkit - GRAM Client Library
+Version: 13.20
+Requires.private: globus-common >= 14, globus-gram-protocol >= 11, globus-io >= 9, globus-rsl >= 9, globus-gss-assist >= 8
+Libs: ${abs_top_builddir}/libglobus_gram_client.la
+Cflags: -I${abs_top_srcdir}

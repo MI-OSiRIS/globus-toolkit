@@ -1,0 +1,13 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+abs_top_srcdir=/user/rdutta/globus-toolkit/gsi/proxy/proxy_core/source
+abs_top_builddir=/user/rdutta/globus-toolkit/gsi/proxy/proxy_core/source
+
+Name: globus-gsi-proxy-core
+Description: Globus Toolkit - Globus GSI Proxy Core Library
+Version: 8.7
+Requires.private: globus-common >= 14, globus-openssl-module >= 3, globus-gsi-openssl-error >= 2, globus-gsi-cert-utils >= 8, globus-gsi-sysconfig >= 5, globus-gsi-proxy-ssl >= 4, globus-gsi-credential >= 5, openssl >= 1.0
+Libs: ${abs_top_builddir}/library/libglobus_gsi_proxy_core.la
+Cflags: -I${abs_top_srcdir}/library

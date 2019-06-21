@@ -1,0 +1,10 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+path=/user/rdutta/globus-toolkit/gram/jobmanager/scripts
+perl5lib=/user/rdutta/globus-toolkit/gram/jobmanager/scripts
+
+Name: globus-gram-job-manager-scripts
+Description: Globus Toolkit - GRAM Job ManagerScripts
+Version: 6.10

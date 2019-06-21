@@ -1,0 +1,11 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+abs_top_srcdir=/user/rdutta/globus-toolkit/gram/jobmanager/lrms/lsf/source
+abs_top_builddir=/user/rdutta/globus-toolkit/gram/jobmanager/lrms/lsf/source
+
+Name: globus-gram-job-manager-lsf
+Description: Globus Toolkit - LSF Job Manager Support
+Version: 2.7
+Requires.private: globus-common >= 14, globus-scheduler-event-generator >= 4

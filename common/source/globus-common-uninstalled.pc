@@ -1,0 +1,17 @@
+prefix=/usr/local/globus-6
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+path=/user/rdutta/globus-toolkit/common/source/scripts:/user/rdutta/globus-toolkit/common/source/programs
+abs_top_builddir=/user/rdutta/globus-toolkit/common/source
+abs_top_srcdir=/user/rdutta/globus-toolkit/common/source
+dlopen=@PTHREAD_PREOPEN_UNINSTALLED@ @WINDOWS_PREOPEN_UNINSTALLED@
+thread_models= pthread
+perl5lib=/user/rdutta/globus-toolkit/common/source/scripts/lib/perl
+
+Name: globus-common
+Description: Globus Toolkit - Common Library
+Version: 17.4
+Libs:  ${abs_top_builddir}/library/libglobus_common.la
+Libs.private: -ldl  -lpthread -lltdl
+Cflags:   -g -O2 -pthread -I${abs_top_builddir} -I${abs_top_srcdir}/library
