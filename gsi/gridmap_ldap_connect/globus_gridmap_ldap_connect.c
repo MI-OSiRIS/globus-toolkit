@@ -653,7 +653,7 @@ globus_gridmap_ldap_connect(
             GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
             ("Ldap server name could not be found.\n",
                 found_identity, desired_identity));
-        goto gridmap_lookup; 
+        goto error; 
     }
     if(ldap_initialize(&ld,ldap_server)!=LDAP_SUCCESS){
         GLOBUS_GRIDMAP_CALLOUT_ERROR(
@@ -661,7 +661,7 @@ globus_gridmap_ldap_connect(
             GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
             ("Ldap server could not be initialized.\n",
                 found_identity, desired_identity));
-        goto gridmap_lookup; 
+        goto error; 
     } 
     if(!(ldap_root = getenv("LDAP_ROOT"))){
         GLOBUS_GRIDMAP_CALLOUT_ERROR(
@@ -669,7 +669,7 @@ globus_gridmap_ldap_connect(
             GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
             ("Ldap root could not be found.\n",
                 found_identity, desired_identity));
-        goto gridmap_lookup; 
+        goto error; 
     }
 
 
@@ -682,7 +682,7 @@ globus_gridmap_ldap_connect(
                 GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
                 ("Ldap bind password not found.\n",
                 found_identity, desired_identity));
-            goto gridmap_lookup; 
+            goto error; 
         }
         if(ldap_simple_bind_s(ld,ldap_bind,ldap_bind_password) != LDAP_SUCCESS){
             GLOBUS_GRIDMAP_CALLOUT_ERROR(
@@ -690,7 +690,7 @@ globus_gridmap_ldap_connect(
                 GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
                 ("Ldap bind failed.\n",
                 found_identity, desired_identity));
-            goto gridmap_lookup; 
+            goto error; 
         }
     }
 
@@ -797,7 +797,7 @@ globus_gridmap_ldap_connect(
             GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
             ("Ldap search failed did not find attribute ldap_dn_attriute matching value.\n",
             found_identity, desired_identity));
-        goto gridmap_lookup;
+        goto error;
     }
 
     e = ldap_first_entry(ld,lresult);
@@ -807,7 +807,7 @@ globus_gridmap_ldap_connect(
             GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
             ("Ldap search results error: No LDAP entry found for client.\n",
             found_identity, desired_identity));
-        goto gridmap_lookup;
+        goto error;
     }
 
     char* uidAttr = ldap_first_attribute(ld, e, &ber);
@@ -817,7 +817,7 @@ globus_gridmap_ldap_connect(
             GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
             ("ldap search results error: No UID attribute found for client ldap_dn_attribute. look up failed.\n",
             found_identity, desired_identity));
-        goto gridmap_lookup;
+        goto error;
     }
     
     char** uidVal = ldap_get_values(ld, e, uidAttr);
@@ -828,7 +828,7 @@ globus_gridmap_ldap_connect(
             ("ldap search results error: No UID Values found for client Lookup failed.\n",
             found_identity, desired_identity));
             ldap_value_free(uidVal);
-        goto gridmap_lookup;
+        goto error;
     }
     
     
