@@ -613,283 +613,269 @@ globus_gridmap_ldap_connect(
         goto error;
     }
 
-    result = ggvm_get_myproxy_userid(
-        context, subject, &found_identity, shared_user_cert, shared_user_chain, shared_exp);
     
-    if(result == GLOBUS_SUCCESS)
-    {
-        if(desired_identity && strcmp(found_identity, desired_identity) != 0)
-        {
+    
+    // start
+       
+    // required
+    char *ldap_server;
+    char *ldap_root;
+
+    // optional
+    char *ldap_bind;
+    char *ldap_bind_password;
+    
+    // defaults
+    char *ldap_dn_attribute;
+    char ldap_dn_attribute_default[] = "voPersonCertificateDN";
+
+    char *uid_attribute;
+    char uid_attribute_default[] = "uid";
+
+    char *ldap_object_class_attribute;
+    char ldap_object_class_attribute_default[] = "objectClass";
+
+    char *ldap_object_class;
+    char ldap_object_class_default[] = "";
+
+    char *filter=NULL;
+    int rc;
+    LDAPMessage *lresult, *e;
+    BerElement *ber;
+
+    LDAP *ld;
+
+    // check required
+    // TODO for each step check ERROR
+    if(!(ldap_server = getenv("LDAP_SERVER"))){
+        GLOBUS_GRIDMAP_CALLOUT_ERROR(
+            result,
+            GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
+            ("Ldap server name could not be found.\n",
+                found_identity, desired_identity));
+        goto gridmap_lookup; 
+    }
+    if(ldap_initialize(&ld,ldap_server)!=LDAP_SUCCESS){
+        GLOBUS_GRIDMAP_CALLOUT_ERROR(
+            result,
+            GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
+            ("Ldap server could not be initialized.\n",
+                found_identity, desired_identity));
+        goto gridmap_lookup; 
+    } 
+    if(!(ldap_root = getenv("LDAP_ROOT"))){
+        GLOBUS_GRIDMAP_CALLOUT_ERROR(
+            result,
+            GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
+            ("Ldap root could not be found.\n",
+                found_identity, desired_identity));
+        goto gridmap_lookup; 
+    }
+
+
+    // bidn always has password dont do kerbos
+    // check for option bind and if so then bind
+    if(ldap_bind = getenv("LDAP_BIND_DN")){
+        if(!(ldap_bind_password = getenv("LDAP_BIND_PASSWORD"))){
             GLOBUS_GRIDMAP_CALLOUT_ERROR(
                 result,
                 GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
-                ("Credentials specify id of %s, can not allow id of %s.\n",
-                 found_identity, desired_identity));
-            globus_free(found_identity);
-            goto error;
+                ("Ldap bind password not found.\n",
+                found_identity, desired_identity));
+            goto gridmap_lookup; 
+        }
+        if(ldap_simple_bind_s(ld,ldap_bind,ldap_bind_password) != LDAP_SUCCESS){
+            GLOBUS_GRIDMAP_CALLOUT_ERROR(
+                result,
+                GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
+                ("Ldap bind failed.\n",
+                found_identity, desired_identity));
+            goto gridmap_lookup; 
         }
     }
-    else{ //todo
-        
-        // required
-        char *ldap_server;
-        char *ldap_root;
 
-        // optional
-        char *ldap_bind;
-        char *ldap_bind_password;
-        
-        // defaults
-        char *ldap_dn_attribute;
-        char ldap_dn_attribute_default[] = "voPersonCertificateDN";
+    // check for defaults fix attribute to attr
+    if(getenv("UID_ATTRIBUTE")){
+        uid_attribute = getenv("UID_ATTRIBUTE");
+    }
+    else{
+        uid_attribute = uid_attribute_default;
+    }
 
-        char *uid_attribute;
-        char uid_attribute_default[] = "uid";
+    if(getenv("LDAP_OBJECT_CLASS")){
+        ldap_object_class = getenv("LDAP_OBJECT_CLASS");
+    } 
+    else{
+        ldap_object_class = ldap_object_class_default;
+    }
 
-        char *ldap_object_class_attribute;
-        char ldap_object_class_attribute_default[] = "objectClass";
+    if(getenv("LDAP_OBJECT_CLASS_ATTRIBUTE")){
+        ldap_object_class_attribute = getenv("LDAP_OBJECT_CLASS_ATTRIBUTE");
+    } 
+    else{
+        ldap_object_class_attribute = ldap_object_class_attribute_default;
+    }
 
-        char *ldap_object_class;
-        char ldap_object_class_default[] = "";
-
-        char *filter=NULL;
-        int rc;
-        LDAPMessage *lresult, *e;
-        BerElement *ber;
-
-        LDAP *ld;
-
-        // check required
-        // TODO for each step check ERROR
-        if(!(ldap_server = getenv("LDAP_SERVER"))){
-            GLOBUS_GRIDMAP_CALLOUT_ERROR(
-                result,
-                GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
-                ("Ldap server name could not be found.\n",
-                 found_identity, desired_identity));
-            goto gridmap_lookup; 
-        }
-        if(ldap_initialize(&ld,ldap_server)!=LDAP_SUCCESS){
-            GLOBUS_GRIDMAP_CALLOUT_ERROR(
-                result,
-                GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
-                ("Ldap server could not be initialized.\n",
-                 found_identity, desired_identity));
-            goto gridmap_lookup; 
-        } 
-        if(!(ldap_root = getenv("LDAP_ROOT"))){
-            GLOBUS_GRIDMAP_CALLOUT_ERROR(
-                result,
-                GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
-                ("Ldap root could not be found.\n",
-                 found_identity, desired_identity));
-            goto gridmap_lookup; 
-        }
+    if(getenv("LDAP_DN_ATTRIBUTE")){
+        ldap_dn_attribute = getenv("LDAP_DN_ATTRIBUTE");
+    }
+    else{
+        ldap_dn_attribute = ldap_dn_attribute_default;
+    }
+    char* attrs[] = {ldap_dn_attribute};
 
 
-        // bidn always has password dont do kerbos
-        // check for option bind and if so then bind
-        if(ldap_bind = getenv("LDAP_BIND_DN")){
-            if(!(ldap_bind_password = getenv("LDAP_BIND_PASSWORD"))){
-                GLOBUS_GRIDMAP_CALLOUT_ERROR(
-                    result,
-                    GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
-                    ("Ldap bind password not found.\n",
-                    found_identity, desired_identity));
-                goto gridmap_lookup; 
-            }
-            if(ldap_simple_bind_s(ld,ldap_bind,ldap_bind_password) != LDAP_SUCCESS){
-                GLOBUS_GRIDMAP_CALLOUT_ERROR(
-                    result,
-                    GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
-                    ("Ldap bind failed.\n",
-                    found_identity, desired_identity));
-                goto gridmap_lookup; 
-            }
-        }
+    //convert subjectDN into ldap format
+    char *b = subject;
+    for(;*b;b++);
+    char *ldap_subject=malloc(b-subject);
+    int i = 0;
+    while(b>subject){
+        for(;*b!='/';b--);
+        char* nStart = b++ -1;
+        for(;*b && *b!='/';b++, i++) ldap_subject[i]=*b;
+        ldap_subject[i++]=',';
+        b=nStart;
+    }
+    ldap_subject[--i]=0;
 
-        // check for defaults fix attribute to attr
-        if(getenv("UID_ATTRIBUTE")){
-            uid_attribute = getenv("UID_ATTRIBUTE");
-        }
-        else{
-            uid_attribute = uid_attribute_default;
-        }
-
-        if(getenv("LDAP_OBJECT_CLASS")){
-            ldap_object_class = getenv("LDAP_OBJECT_CLASS");
-        } 
-        else{
-            ldap_object_class = ldap_object_class_default;
-        }
-
-        if(getenv("LDAP_OBJECT_CLASS_ATTRIBUTE")){
-            ldap_object_class_attribute = getenv("LDAP_OBJECT_CLASS_ATTRIBUTE");
-        } 
-        else{
-            ldap_object_class_attribute = ldap_object_class_attribute_default;
-        }
-
-        if(getenv("LDAP_DN_ATTRIBUTE")){
-            ldap_dn_attribute = getenv("LDAP_DN_ATTRIBUTE");
-        }
-        else{
-            ldap_dn_attribute = ldap_dn_attribute_default;
-        }
-        char* attrs[] = {ldap_dn_attribute};
-
-
-        //convert subjectDN into ldap format
-        char *b = subject;
-        for(;*b;b++);
-        char *ldap_subject=malloc(b-subject);
+    // Create filter
+    int filterLen =(signed) 1+strlen(ldap_dn_attribute)+1+strlen(ldap_subject)+1;
+    if(strlen(ldap_object_class)!=0){
+        filterLen+=1+strlen(ldap_object_class_attribute)+1+strlen(ldap_object_class)+1+3;
+    }
+    filterLen+=1;
+    
+    filter = malloc(filterLen);
+    if(strlen(ldap_object_class)==0){
         int i = 0;
-        while(b>subject){
-            for(;*b!='/';b--);
-            char* nStart = b++ -1;
-            for(;*b && *b!='/';b++, i++) ldap_subject[i]=*b;
-            ldap_subject[i++]=',';
-            b=nStart;
-        }
-        ldap_subject[--i]=0;
+        char *b;
 
-        // Create filter
-        int filterLen =(signed) 1+strlen(ldap_dn_attribute)+1+strlen(ldap_subject)+1;
-        if(strlen(ldap_object_class)!=0){
-            filterLen+=1+strlen(ldap_object_class_attribute)+1+strlen(ldap_object_class)+1+3;
-        }
-        filterLen+=1;
-        
-        filter = malloc(filterLen);
-        if(strlen(ldap_object_class)==0){
-            int i = 0;
-            char *b;
+        filter[i++]='(';
+        for(b=ldap_dn_attribute;*b;b++) filter[i++]=*b;
+        filter[i++]='=';
+        for(b=ldap_subject;*b;b++) filter[i++]=*b;
+        filter[i++]=')';
 
-            filter[i++]='(';
-            for(b=ldap_dn_attribute;*b;b++) filter[i++]=*b;
-            filter[i++]='=';
-            for(b=ldap_subject;*b;b++) filter[i++]=*b;
-            filter[i++]=')';
-
-            filter[i]=0;
-        }
-        else{
-            int i = 0;
-            char *b;
-
-            filter[i++]='(';
-            filter[i++]='&';
-
-            filter[i++]='(';
-            for(b=ldap_dn_attribute;*b;b++) filter[i++]=*b;
-            filter[i++]='=';
-            for(b=ldap_subject;*b;b++) filter[i++]=*b;
-            filter[i++]=')';
-
-            filter[i++]='(';
-            for(b=ldap_object_class_attribute;*b;b++) filter[i++]=*b;
-            filter[i++]='=';
-            for(b=ldap_object_class;*b;b++) filter[i++]=*b;
-            filter[i++]=')';
-
-            filter[i++]=')';
-
-            filter[i]=0;
-        }
-
-        
-        rc = ldap_search_s(ld,ldap_root,LDAP_SCOPE_SUBTREE,filter,attrs,0,&lresult);
-        
-        //free malloc
-        free(ldap_subject);
-        free(filter);
-        
-
-        if( rc != LDAP_SUCCESS){
-            GLOBUS_GRIDMAP_CALLOUT_ERROR(
-                result,
-                GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
-                ("Ldap search failed did not find attribute ldap_dn_attriute matching value.\n",
-                found_identity, desired_identity));
-            goto gridmap_lookup;
-        }
-
-        e = ldap_first_entry(ld,lresult);
-        if (e == NULL){
-            GLOBUS_GRIDMAP_CALLOUT_ERROR(
-                result,
-                GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
-                ("Ldap search results error: No LDAP entry found for client.\n",
-                found_identity, desired_identity));
-            goto gridmap_lookup;
-        }
-
-        char* uidAttr = ldap_first_attribute(ld, e, &ber);
-        if (uidAttr == NULL){
-            GLOBUS_GRIDMAP_CALLOUT_ERROR(
-                result,
-                GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
-                ("ldap search results error: No UID attribute found for client ldap_dn_attribute. look up failed.\n",
-                found_identity, desired_identity));
-            goto gridmap_lookup;
-        }
-        
-        char** uidVal = ldap_get_values(ld, e, uidAttr);
-        if (uidVal == NULL){
-            GLOBUS_GRIDMAP_CALLOUT_ERROR(
-                result,
-                GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
-                ("ldap search results error: No UID Values found for client Lookup failed.\n",
-                found_identity, desired_identity));
-                ldap_value_free(uidVal);
-            goto gridmap_lookup;
-        }
-      
-        
-        // uidVal[0] is the uid
-
-        if(desired_identity && strcmp(uidVal[0], desired_identity) != 0)
-        {
-            GLOBUS_GRIDMAP_CALLOUT_ERROR(
-                result,
-                GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
-                ("Credentials specify id of %s, can not allow id of %s.\n",
-                 uidVal[0], desired_identity));
-                 ldap_value_free(uidVal);
-            goto error;
-        }
-        ldap_value_free(uidVal);
-
-        gridmap_lookup:
-            /* proceed with gridmap lookup */
-            if(desired_identity == NULL)
-            {
-                rc = globus_gss_assist_gridmap(subject, &found_identity);
-                if(rc != 0)
-                {
-                    GLOBUS_GRIDMAP_CALLOUT_ERROR(
-                        result,
-                        GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
-                        ("Could not map %s\n", subject));
-                    goto error;
-                }
-            }
-            else
-            {
-                rc = globus_gss_assist_userok(subject, desired_identity);
-                if(rc != 0)
-                {
-                    GLOBUS_GRIDMAP_CALLOUT_ERROR(
-                        result,
-                        GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
-                        ("Could not map %s to %s\n",
-                        subject, desired_identity));
-                    goto error;
-                }
-                found_identity = globus_libc_strdup(desired_identity);
-            }
-            result = GLOBUS_SUCCESS;
+        filter[i]=0;
     }
+    else{
+        int i = 0;
+        char *b;
+
+        filter[i++]='(';
+        filter[i++]='&';
+
+        filter[i++]='(';
+        for(b=ldap_dn_attribute;*b;b++) filter[i++]=*b;
+        filter[i++]='=';
+        for(b=ldap_subject;*b;b++) filter[i++]=*b;
+        filter[i++]=')';
+
+        filter[i++]='(';
+        for(b=ldap_object_class_attribute;*b;b++) filter[i++]=*b;
+        filter[i++]='=';
+        for(b=ldap_object_class;*b;b++) filter[i++]=*b;
+        filter[i++]=')';
+
+        filter[i++]=')';
+
+        filter[i]=0;
+    }
+
+    
+    rc = ldap_search_s(ld,ldap_root,LDAP_SCOPE_SUBTREE,filter,attrs,0,&lresult);
+    
+    //free malloc
+    free(ldap_subject);
+    free(filter);
+    
+
+    if( rc != LDAP_SUCCESS){
+        GLOBUS_GRIDMAP_CALLOUT_ERROR(
+            result,
+            GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
+            ("Ldap search failed did not find attribute ldap_dn_attriute matching value.\n",
+            found_identity, desired_identity));
+        goto gridmap_lookup;
+    }
+
+    e = ldap_first_entry(ld,lresult);
+    if (e == NULL){
+        GLOBUS_GRIDMAP_CALLOUT_ERROR(
+            result,
+            GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
+            ("Ldap search results error: No LDAP entry found for client.\n",
+            found_identity, desired_identity));
+        goto gridmap_lookup;
+    }
+
+    char* uidAttr = ldap_first_attribute(ld, e, &ber);
+    if (uidAttr == NULL){
+        GLOBUS_GRIDMAP_CALLOUT_ERROR(
+            result,
+            GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
+            ("ldap search results error: No UID attribute found for client ldap_dn_attribute. look up failed.\n",
+            found_identity, desired_identity));
+        goto gridmap_lookup;
+    }
+    
+    char** uidVal = ldap_get_values(ld, e, uidAttr);
+    if (uidVal == NULL){
+        GLOBUS_GRIDMAP_CALLOUT_ERROR(
+            result,
+            GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
+            ("ldap search results error: No UID Values found for client Lookup failed.\n",
+            found_identity, desired_identity));
+            ldap_value_free(uidVal);
+        goto gridmap_lookup;
+    }
+    
+    
+    // uidVal[0] is the uid
+
+    if(desired_identity && strcmp(uidVal[0], desired_identity) != 0)
+    {
+        GLOBUS_GRIDMAP_CALLOUT_ERROR(
+            result,
+            GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
+            ("Credentials specify id of %s, can not allow id of %s.\n",
+                uidVal[0], desired_identity));
+                ldap_value_free(uidVal);
+        goto error;
+    }
+    ldap_value_free(uidVal);
+
+    gridmap_lookup:
+        /* proceed with gridmap lookup */
+        if(desired_identity == NULL)
+        {
+            rc = globus_gss_assist_gridmap(subject, &found_identity);
+            if(rc != 0)
+            {
+                GLOBUS_GRIDMAP_CALLOUT_ERROR(
+                    result,
+                    GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
+                    ("Could not map %s\n", subject));
+                goto error;
+            }
+        }
+        else
+        {
+            rc = globus_gss_assist_userok(subject, desired_identity);
+            if(rc != 0)
+            {
+                GLOBUS_GRIDMAP_CALLOUT_ERROR(
+                    result,
+                    GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
+                    ("Could not map %s to %s\n",
+                    subject, desired_identity));
+                goto error;
+            }
+            found_identity = globus_libc_strdup(desired_identity);
+        }
+        result = GLOBUS_SUCCESS;
+    // end
 
     if(found_identity)
     {
