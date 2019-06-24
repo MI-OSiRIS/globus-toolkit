@@ -630,7 +630,8 @@ globus_gridmap_ldap_connect(
         }
     }
     
-       
+    bool doGridmap = true;
+
     // required
     char *ldap_server;
     char *ldap_root;
@@ -860,37 +861,40 @@ globus_gridmap_ldap_connect(
         goto error;
     }
     ldap_value_free(uidVal);
+    doGridmap = false;
     
 
     gridmap_lookup:
         /* proceed with gridmap lookup */
-        if(desired_identity == NULL)
-        {
-            rc = globus_gss_assist_gridmap(subject, &found_identity);
-            if(rc != 0)
+        if(doGridmap){
+            if(desired_identity == NULL)
             {
-                GLOBUS_GRIDMAP_CALLOUT_ERROR(
-                    result,
-                    GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
-                    ("Could not map %s\n", subject));
-                goto error;
+                rc = globus_gss_assist_gridmap(subject, &found_identity);
+                if(rc != 0)
+                {
+                    GLOBUS_GRIDMAP_CALLOUT_ERROR(
+                        result,
+                        GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
+                        ("Could not map %s\n", subject));
+                    goto error;
+                }
             }
-        }
-        else
-        {
-            rc = globus_gss_assist_userok(subject, desired_identity);
-            if(rc != 0)
+            else
             {
-                GLOBUS_GRIDMAP_CALLOUT_ERROR(
-                    result,
-                    GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
-                    ("Could not map %s to %s\n",
-                    subject, desired_identity));
-                goto error;
+                rc = globus_gss_assist_userok(subject, desired_identity);
+                if(rc != 0)
+                {
+                    GLOBUS_GRIDMAP_CALLOUT_ERROR(
+                        result,
+                        GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
+                        ("Could not map %s to %s\n",
+                        subject, desired_identity));
+                    goto error;
+                }
+                found_identity = globus_libc_strdup(desired_identity);
             }
-            found_identity = globus_libc_strdup(desired_identity);
+            result = GLOBUS_SUCCESS;
         }
-        result = GLOBUS_SUCCESS;
     // end
 
     if(found_identity)
