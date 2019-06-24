@@ -614,7 +614,7 @@ globus_gridmap_ldap_connect(
     }
 
     
-    bool doGridmap = true;
+    int doGridmap = 0;
 
     // required
     char *ldap_server;
@@ -845,18 +845,10 @@ globus_gridmap_ldap_connect(
         goto error;
     }
     ldap_value_free(uidVal);
-    doGridmap = false;
-    
-        GLOBUS_GRIDMAP_CALLOUT_ERROR(
-            result,
-            GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
-            ("Goes here.\n",
-                found_identity, desired_identity));
-        goto error; 
-
+    doGridmap = 1;
     gridmap_lookup:
         /* proceed with gridmap lookup */
-        if(doGridmap){
+        if(doGridmap==0){
             if(desired_identity == NULL)
             {
                 rc = globus_gss_assist_gridmap(subject, &found_identity);
