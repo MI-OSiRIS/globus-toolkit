@@ -844,6 +844,18 @@ globus_gridmap_ldap_connect(
                 ldap_value_free(uidVal);
         goto error;
     }
+    if(strlen(uidVal[0]) + 1 > buffer_length)
+    {
+        GLOBUS_GRIDMAP_CALLOUT_ERROR(
+            result,
+            GLOBUS_GRIDMAP_CALLOUT_BUFFER_TOO_SMALL,
+            ("Local identity length: %d Buffer length: %d\n",
+                strlen(uidVal[0]), buffer_length));
+    }
+    else
+    {
+        strcpy(identity_buffer, uidVal[0]);
+    }
     ldap_value_free(uidVal);
     doGridmap = 1;
     gridmap_lookup:
@@ -895,6 +907,7 @@ globus_gridmap_ldap_connect(
         }
         globus_free(found_identity);
     }
+
 
 
 error:
