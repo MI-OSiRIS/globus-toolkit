@@ -844,8 +844,25 @@ globus_gridmap_ldap_connect(
                 ldap_value_free(uidVal);
         goto error;
     }
-    ldap_value_free(uidVal);
+
     doGridmap = 1;
+    result = GLOBUS_SUCCESS;
+/*    if(uidVal)
+    {
+        if(strlen(uidVal[0]) + 1 > buffer_length)
+        {
+            GLOBUS_GRIDMAP_CALLOUT_ERROR(
+                result,
+                GLOBUS_GRIDMAP_CALLOUT_BUFFER_TOO_SMALL,
+                ("Local identity length: %d Buffer length: %d\n",
+                 strlen(found_identity), buffer_length));
+        }
+        else
+        {
+            strcpy(uidVal[0], found_identity);
+        }
+        ldap_value_free(uidVal);
+    }*/
     gridmap_lookup:
         /* proceed with gridmap lookup */
         if(doGridmap==0){
