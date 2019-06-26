@@ -625,8 +625,8 @@ globus_gridmap_ldap_connect(
     char *ldap_bind_password;
     
     // defaults
-    char *ldap_dn_attribute;
-    char ldap_dn_attribute_default[] = "voPersonCertificateDN";
+    char *ldap_cert_dn_attribute;
+    char ldap_cert_dn_attribute_default[] = "voPersonCertificateDN";
 
     char *uid_attribute;
     char uid_attribute_default[] = "uid";
@@ -715,13 +715,13 @@ globus_gridmap_ldap_connect(
         ldap_object_class_attribute = ldap_object_class_attribute_default;
     }
 
-    if(getenv("LDAP_DN_ATTRIBUTE")){
-        ldap_dn_attribute = getenv("LDAP_DN_ATTRIBUTE");
+    if(getenv("LDAP_CERT_DN_ATTRIBUTE")){
+        ldap_cert_dn_attribute = getenv("LDAP_DN_ATTRIBUTE");
     }
     else{
-        ldap_dn_attribute = ldap_dn_attribute_default;
+        ldap_cert_dn_attribute = ldap_cert_dn_attribute_default;
     }
-    char* attrs[] = {ldap_dn_attribute};
+    char* attrs[] = {uid_attribute};
 
 
     //convert subjectDN into ldap format
@@ -739,7 +739,7 @@ globus_gridmap_ldap_connect(
     ldap_subject[--i]=0;
 
     // Create filter
-    int filterLen =(signed) 1+strlen(ldap_dn_attribute)+1+strlen(ldap_subject)+1;
+    int filterLen =(signed) 1+strlen(ldap_cert_dn_attribute)+1+strlen(ldap_subject)+1;
     if(strlen(ldap_object_class)!=0){
         filterLen+=1+strlen(ldap_object_class_attribute)+1+strlen(ldap_object_class)+1+3;
     }
@@ -751,7 +751,7 @@ globus_gridmap_ldap_connect(
         char *b;
 
         filter[i++]='(';
-        for(b=ldap_dn_attribute;*b;b++) filter[i++]=*b;
+        for(b=ldap_cert_dn_attribute;*b;b++) filter[i++]=*b;
         filter[i++]='=';
         for(b=ldap_subject;*b;b++) filter[i++]=*b;
         filter[i++]=')';
@@ -766,7 +766,7 @@ globus_gridmap_ldap_connect(
         filter[i++]='&';
 
         filter[i++]='(';
-        for(b=ldap_dn_attribute;*b;b++) filter[i++]=*b;
+        for(b=ldap_cert_dn_attribute;*b;b++) filter[i++]=*b;
         filter[i++]='=';
         for(b=ldap_subject;*b;b++) filter[i++]=*b;
         filter[i++]=')';
@@ -845,9 +845,7 @@ globus_gridmap_ldap_connect(
         goto error;
     }
 
-    doGridmap = 1;
-    result = GLOBUS_SUCCESS;
-/*    if(uidVal)
+    if(uidVal[0])
     {
         if(strlen(uidVal[0]) + 1 > buffer_length)
         {
@@ -855,14 +853,15 @@ globus_gridmap_ldap_connect(
                 result,
                 GLOBUS_GRIDMAP_CALLOUT_BUFFER_TOO_SMALL,
                 ("Local identity length: %d Buffer length: %d\n",
-                 strlen(found_identity), buffer_length));
+                 strlen(uidVal[0]), buffer_length));
         }
         else
         {
-            strcpy(uidVal[0], found_identity);
+            strcpy(identity_buffer,uidVal[0]);
         }
         ldap_value_free(uidVal);
-    }*/
+    }
+    doGridmap=1;
     gridmap_lookup:
         /* proceed with gridmap lookup */
         if(doGridmap==0){
@@ -912,6 +911,7 @@ globus_gridmap_ldap_connect(
         }
         globus_free(found_identity);
     }
+
 
 
 error:
