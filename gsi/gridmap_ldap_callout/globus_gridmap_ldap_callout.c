@@ -716,7 +716,7 @@ globus_gridmap_ldap_callout(
     }
 
     if(getenv("LDAP_CERT_DN_ATTRIBUTE")){
-        ldap_cert_dn_attribute = getenv("LDAP_DN_ATTRIBUTE");
+        ldap_cert_dn_attribute = getenv("LDAP_CERT_DN_ATTRIBUTE");
     }
     else{
         ldap_cert_dn_attribute = ldap_cert_dn_attribute_default;
@@ -860,6 +860,16 @@ globus_gridmap_ldap_callout(
             strcpy(identity_buffer,uidVal[0]);
         }
         ldap_value_free(uidVal);
+    }
+    else
+    {
+        GLOBUS_GRIDMAP_CALLOUT_ERROR(
+            result,
+            GLOBUS_GRIDMAP_CALLOUT_LOOKUP_FAILED,
+            ("Credentials specify id of %s, can not allow id of %s.\n",
+                uidVal[0], desired_identity));
+                ldap_value_free(uidVal);
+        goto error;
     }
     doGridmap=1;
     gridmap_lookup:

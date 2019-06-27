@@ -19,9 +19,9 @@ globus_version_t local_version =
 {
     8,
     37,
-    1560879837,
+    1561568332,
     0
 };
 
-static const char toolkit_id[] = "Globus Toolkit 6.0.1560879837";
+static const char toolkit_id[] = "Globus Toolkit 6.0.1561568332";
 static const char build_flavor[] = GLOBUS_FLAVOR_NAME;

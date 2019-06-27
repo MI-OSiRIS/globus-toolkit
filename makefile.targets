@@ -1420,35 +1420,35 @@ $(globus_gridmap_eppn_callout-osx-pkg)_SUBDIR = gsi/gridmap_eppn_callout
 $(globus_gridmap_eppn_callout-osx-pkg)_PACKAGE_NAME = globus_gridmap_eppn_callout
 $(globus_gridmap_eppn_callout-osx-pkg)_PACKAGE_VERSION = 1.14
 globus_gridmap_eppn_callout-osx-pkg: $(globus_gridmap_eppn_callout-osx-pkg)
-globus_gridmap_ldap_connect-stamp_SUBDIR = gsi/gridmap_ldap_connect
-globus_gridmap_ldap_connect-all_SUBDIR = gsi/gridmap_ldap_connect
-globus_gridmap_ldap_connect-clean_SUBDIR = gsi/gridmap_ldap_connect
-globus_gridmap_ldap_connect-install_SUBDIR = gsi/gridmap_ldap_connect
-globus_gridmap_ldap_connect-check_SUBDIR = gsi/gridmap_ldap_connect
-globus_gridmap_ldap_connect-check: globus_gridmap_ldap_connect-stamp
-globus_gridmap_ldap_connect-clean_stamp = globus_gridmap_ldap_connect-stamp
-globus_gridmap_ldap_connect-install_stamp = globus_gridmap_ldap_connect-stamp
-globus_gridmap_ldap_connect-dist_SUBDIR = gsi/gridmap_ldap_connect
-globus_gridmap_ldap_connect-deps = globus_gsi_sysconfig-stamp globus_gssapi_gsi-stamp globus_gss_assist-stamp globus_gridmap_callout_error-stamp globus_gsi_credential-stamp
-globus_gridmap_ldap_connect: globus_gridmap_ldap_connect-all
-globus_gridmap_ldap_connect-all: globus_gridmap_ldap_connect-stamp
-globus_gridmap_ldap_connect-install: globus_gridmap_ldap_connect-stamp
-globus_gridmap_ldap_connect-stamp: $(globus_gridmap_ldap_connect-deps)
-globus_gridmap_ldap_connect-dist-tarball = globus_gridmap_ldap_connect-1.14.tar.gz
-package-output/$(globus_gridmap_ldap_connect-dist-tarball): globus_gridmap_ldap_connect-dist
-globus_gridmap_ldap_connect-rpm_SPECFILE = $(srcdir)/packaging/fedora/globus-gridmap-ldap-connect.spec
-globus_gridmap_ldap_connect-rpm_SOURCE = package-output/$(globus_gridmap_ldap_connect-dist-tarball)
-globus_gridmap_ldap_connect-rpm: $(globus_gridmap_ldap_connect-rpm_SOURCE) $(globus_gridmap_ldap_connect-rpm_SPECFILE)
-globus_gridmap_ldap_connect-deb_PACKAGE_NAME = globus-gridmap-ldap-connect
-globus_gridmap_ldap_connect-deb_SOURCE = package-output/$(globus_gridmap_ldap_connect-dist-tarball)
-globus_gridmap_ldap_connect-deb_TARBALL = debbuild/globus-gridmap-ldap-connect_1.14.orig.tar.gz
-globus_gridmap_ldap_connect-deb: $(globus_gridmap_ldap_connect-deb_SOURCE)
-globus_gridmap_ldap_connect-osx-pkg = osx/packages/globus_gridmap_ldap_connect-1.14.pkg
-$(globus_gridmap_ldap_connect-osx-pkg): globus_gridmap_ldap_connect-stamp
-$(globus_gridmap_ldap_connect-osx-pkg)_SUBDIR = gsi/gridmap_ldap_connect
-$(globus_gridmap_ldap_connect-osx-pkg)_PACKAGE_NAME = globus_gridmap_ldap_connect
-$(globus_gridmap_ldap_connect-osx-pkg)_PACKAGE_VERSION = 1.14
-globus_gridmap_ldap_connect-osx-pkg: $(globus_gridmap_ldap_connect-osx-pkg)
+globus_gridmap_ldap_callout-stamp_SUBDIR = gsi/gridmap_ldap_callout
+globus_gridmap_ldap_callout-all_SUBDIR = gsi/gridmap_ldap_callout
+globus_gridmap_ldap_callout-clean_SUBDIR = gsi/gridmap_ldap_callout
+globus_gridmap_ldap_callout-install_SUBDIR = gsi/gridmap_ldap_callout
+globus_gridmap_ldap_callout-check_SUBDIR = gsi/gridmap_ldap_callout
+globus_gridmap_ldap_callout-check: globus_gridmap_ldap_callout-stamp
+globus_gridmap_ldap_callout-clean_stamp = globus_gridmap_ldap_callout-stamp
+globus_gridmap_ldap_callout-install_stamp = globus_gridmap_ldap_callout-stamp
+globus_gridmap_ldap_callout-dist_SUBDIR = gsi/gridmap_ldap_callout
+globus_gridmap_ldap_callout-deps = globus_gsi_sysconfig-stamp globus_gssapi_gsi-stamp globus_gss_assist-stamp globus_gridmap_callout_error-stamp globus_gsi_credential-stamp
+globus_gridmap_ldap_callout: globus_gridmap_ldap_callout-all
+globus_gridmap_ldap_callout-all: globus_gridmap_ldap_callout-stamp
+globus_gridmap_ldap_callout-install: globus_gridmap_ldap_callout-stamp
+globus_gridmap_ldap_callout-stamp: $(globus_gridmap_ldap_callout-deps)
+globus_gridmap_ldap_callout-dist-tarball = globus_gridmap_ldap_callout-1.14.tar.gz
+package-output/$(globus_gridmap_ldap_callout-dist-tarball): globus_gridmap_ldap_callout-dist
+globus_gridmap_ldap_callout-rpm_SPECFILE = $(srcdir)/packaging/fedora/globus-gridmap-ldap-callout.spec
+globus_gridmap_ldap_callout-rpm_SOURCE = package-output/$(globus_gridmap_ldap_callout-dist-tarball)
+globus_gridmap_ldap_callout-rpm: $(globus_gridmap_ldap_callout-rpm_SOURCE) $(globus_gridmap_ldap_callout-rpm_SPECFILE)
+globus_gridmap_ldap_callout-deb_PACKAGE_NAME = globus-gridmap-ldap-callout
+globus_gridmap_ldap_callout-deb_SOURCE = package-output/$(globus_gridmap_ldap_callout-dist-tarball)
+globus_gridmap_ldap_callout-deb_TARBALL = debbuild/globus-gridmap-ldap-callout_1.14.orig.tar.gz
+globus_gridmap_ldap_callout-deb: $(globus_gridmap_ldap_callout-deb_SOURCE)
+globus_gridmap_ldap_callout-osx-pkg = osx/packages/globus_gridmap_ldap_callout-1.14.pkg
+$(globus_gridmap_ldap_callout-osx-pkg): globus_gridmap_ldap_callout-stamp
+$(globus_gridmap_ldap_callout-osx-pkg)_SUBDIR = gsi/gridmap_ldap_callout
+$(globus_gridmap_ldap_callout-osx-pkg)_PACKAGE_NAME = globus_gridmap_ldap_callout
+$(globus_gridmap_ldap_callout-osx-pkg)_PACKAGE_VERSION = 1.14
+globus_gridmap_ldap_callout-osx-pkg: $(globus_gridmap_ldap_callout-osx-pkg)
 globus_gram_job_manager_condor-stamp_SUBDIR = gram/jobmanager/lrms/condor/source
 globus_gram_job_manager_condor-all_SUBDIR = gram/jobmanager/lrms/condor/source
 globus_gram_job_manager_condor-clean_SUBDIR = gram/jobmanager/lrms/condor/source
@@ -1839,7 +1839,7 @@ gridftp-deps =  globus_gfork-stamp globus_ftp_control-stamp globus_gridftp_serve
 gridftp: $(gridftp-deps)
 gridftp-xio-drivers = globus_xio_gridftp_driver-stamp
 
-gsi-deps =  globus_gsi_openssl_error-stamp globus_gsi_proxy_ssl-stamp globus_openssl_module-stamp globus_gsi_cert_utils-stamp globus_gsi_sysconfig-stamp globus_gsi_callback-stamp globus_gsi_credential-stamp globus_gsi_proxy_core-stamp globus_gssapi_gsi-stamp globus_gss_assist-stamp globus_gssapi_error-stamp globus_authz_callout_error-stamp globus_authz-stamp globus_simple_ca-stamp globus_gridmap_callout_error-stamp globus_gridmap_callout-stamp globus_gridmap_verify_myproxy_callout-stamp globus_gridmap_eppn_callout-stamp globus_gridmap_ldap_connect-stamp globus_proxy_utils-stamp
+gsi-deps =  globus_gsi_openssl_error-stamp globus_gsi_proxy_ssl-stamp globus_openssl_module-stamp globus_gsi_cert_utils-stamp globus_gsi_sysconfig-stamp globus_gsi_callback-stamp globus_gsi_credential-stamp globus_gsi_proxy_core-stamp globus_gssapi_gsi-stamp globus_gss_assist-stamp globus_gssapi_error-stamp globus_authz_callout_error-stamp globus_authz-stamp globus_simple_ca-stamp globus_gridmap_callout_error-stamp globus_gridmap_callout-stamp globus_gridmap_verify_myproxy_callout-stamp globus_gridmap_eppn_callout-stamp globus_gridmap_ldap_callout-stamp globus_proxy_utils-stamp
 gsi: $(gsi-deps)
 gsi-xio-drivers =
 

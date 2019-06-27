@@ -20,6 +20,6 @@ globus_version_t local_version =
 
     11,
     2,
-    1560879837,
+    1561568332,
     0
 };

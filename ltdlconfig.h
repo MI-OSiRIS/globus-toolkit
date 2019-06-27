@@ -161,7 +161,7 @@
 #define PACKAGE_NAME "globus_toolkit"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "globus_toolkit 6.0.1560879837"
+#define PACKAGE_STRING "globus_toolkit 6.0.1561568332"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "globus_toolkit"
@@ -170,13 +170,13 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "6.0.1560879837"
+#define PACKAGE_VERSION "6.0.1561568332"
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "6.0.1560879837"
+#define VERSION "6.0.1561568332"
 
 /* Define so that glibc/gnulib argp.h does not typedef error_t. */
 /* #undef __error_t_defined */
